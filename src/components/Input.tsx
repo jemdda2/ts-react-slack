@@ -1,9 +1,24 @@
 import * as React from 'react';
 import styled from 'styled-components/macro';
 
+const InputStyle = styled.input`
+	padding: 1rem;
+	border-radius: 7px;
+	border: 3px solid darkgrey;
+	font-size: 1rem;
+	outline: none;
+	&:hover, &:active, &:focus {
+		border: 3px solid dimgray;
+	}
+	box-sizing: border-box;
+	position: fixed;
+	bottom: 10px;
+	width: calc(100vw - 220px);
+`;
+
 function InputMessage() {
   return (
-    <input type="text" />
+    <InputStyle type="text" placeholder="Message Jisoon Kim" />
   );
 }
 

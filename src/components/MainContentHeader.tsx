@@ -4,15 +4,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-regular-svg-icons';
 
 const Container = styled.div`
+	position: fixed;
 	display: flex;
 	top: 0;
 	z-index: 5;
 	background-color: white;
-	/* width: calc(100vw - 180px); */
+	width: calc(100vw - 220px);
 	flex-wrap: wrap;
 	justify-content: space-between;
 	align-items: center;
-	padding: 0 0 1rem 0;
+	padding: 1rem 0;
 	border-bottom: 1px solid lightgray;
 `;
 

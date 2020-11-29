@@ -10,6 +10,7 @@ const SidebarContainer = styled.div`
 	background: rebeccapurple;
 	padding: 1rem;
 	color: white;
+  box-sizing: border-box;
 `;
 
 const Header = styled.header`
