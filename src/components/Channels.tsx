@@ -35,8 +35,17 @@ const ChannelPlusIcon = styled(FontAwesomeIcon)`
 	margin-right: 5px;
 `;
 
-function Channels() {
-  const channels = ['announcements', 'general', 'frontend', 'backend', 'randaom'];
+export interface Channel {
+  id: string;
+  name: string; 
+}
+
+interface ChannelProps {
+  channels: Channel[]
+}
+
+function Channels({channels}: ChannelProps) {
+  // const channels = ['announcements', 'general', 'frontend', 'backend', 'randaom'];
 
   return (
     <>
@@ -46,15 +55,13 @@ function Channels() {
       </ChannelsTitles>
       <ul>
         {channels.map(channel => (
-          <ChannelItem key={channel}>
-            # 
+          <ChannelItem key={channel.id}>
+            #
             {' '}
-            {channel}
+            {channel.name}
           </ChannelItem>
         ))}
       </ul>
-
-        
       <Button className="channel-button">
         <ChannelPlusIcon icon={faPlus} />
         Add channel

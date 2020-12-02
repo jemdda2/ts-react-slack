@@ -2,8 +2,23 @@ import * as React from 'react';
 import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-regular-svg-icons';
-import Channels from './Channels';
+import gql from 'graphql-tag';
+import { Query } from 'react-apollo';
 import DirectMessages from './DirectMessage';
+import Channels, { Channel } from './Channels';
+
+const membershipQuery = gql`
+{
+  Membership(where: {userId: {_eq: "user1"}}) {
+    id
+    direct
+    Channel {
+      id
+      name
+    }
+  }
+}
+`;
 
 const SidebarContainer = styled.div`
 	height: 100%;
@@ -41,22 +56,42 @@ export const Status = styled.span`
 	display: inline-block;
 `;
 
+interface Membership {
+  direct: boolean;
+  id: string;
+  Channel: Channel;
+}
+
 function Sidebar() {
   return (
-    <SidebarContainer>
-      <Header>
-        <H1>Slack clone</H1>
-        <div>
-          <FontAwesomeIcon icon={faBell} />
-        </div>
-        <UsernameContainer>
-          <Status />
-          Jisoon Kim
-        </UsernameContainer>
-      </Header>
-      <Channels />
-      <DirectMessages />
-    </SidebarContainer>
+    <Query query={membershipQuery}>
+      {({loading, error, data}: any) => (
+        <SidebarContainer>
+          <Header>
+            <H1>Slack clone</H1>
+            <div>
+              <FontAwesomeIcon icon={faBell} />
+            </div>
+            <UsernameContainer>
+              <Status />
+              Jisoon Kim
+            </UsernameContainer>
+          </Header>
+          {!loading && data.Membership? (
+            <>
+              <Channels channels={(data.Membership as Membership[]).filter(membership => !membership.direct).map(membership => membership.Channel)} />
+              <DirectMessages channels={(data.Membership as Membership[]).reduce((acc, value) => {
+                if (value.direct) {
+                  return [...acc, value.Channel];
+                }
+                return acc;
+              }, [] as Channel[])}
+              />
+            </>
+          ) : null}
+        </SidebarContainer>
+      )}
+    </Query>
   );
 }
 

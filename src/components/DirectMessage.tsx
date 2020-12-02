@@ -3,6 +3,7 @@ import styled from 'styled-components/macro';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Status } from './Sidebar';
+import { Channel } from './Channels';
 
 const MessagesTitles = styled.div`
 	margin: 2rem 0 1rem 0;
@@ -20,9 +21,11 @@ const MessageItem = styled.li`
 	margin: 0.25rem 0;
 `;
 
-function DirectMessage() {
-  const channels = ['Bot', 'Jane Doe', 'Lance Amstrong', 'Johny Depp', 'Miley Cyrus'];
+interface DirectMessageProps {
+  channels: Channel[];
+}
 
+const DirectMessage: React.FC<DirectMessageProps> = ({ channels }) => {
   return (
     <>
       <MessagesTitles>
@@ -31,14 +34,14 @@ function DirectMessage() {
       </MessagesTitles>
       <ul>
         {channels.map(channel => (
-          <MessageItem key={channel}>
+          <MessageItem key={channel.id}>
             <Status />
-            {channel}
+            {channel.name}
           </MessageItem>
         ))}
       </ul>
     </>
   );
-}
+};
 
 export default DirectMessage;

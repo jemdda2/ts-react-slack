@@ -1,6 +1,97 @@
-import { log } from 'console';
+import gql from 'graphql-tag';
 import React, { useEffect } from 'react';
+import { Query, Subscription } from 'react-apollo';
 import styled from 'styled-components/macro';
+
+const messageQuery  = gql`
+{
+  Message (where: {channelId: {_eq: "684a8b09-153a-4f7c-b078-38a64c819112"}}) {
+    body
+    date
+    User{
+      username
+    }
+  }
+}
+`;
+
+const messageSubscription = gql`
+{
+  subscription {
+
+    Message (where: {channelId: {_eq: "684a8b09-153a-4f7c-b078-38a64c819112"}}) {
+      body
+      date
+      User{
+        username
+      }
+    }
+  }
+}
+
+`;
+
+interface Message {
+  id: string;
+  body: string;
+  date: string;
+  User: {
+    username: string;
+  }
+}
+
+const MessageItem = () => {
+   
+};
+
+function MessageBox() {
+  const messageListRef = React.createRef<HTMLDivElement>();
+	
+  useEffect(() => {
+    messageListRef.current!.scrollTo(
+      messageListRef.current!.scrollTop, 
+      messageListRef.current!.scrollHeight,
+    );
+  }, [messageListRef]);
+
+  return (
+    <Subscription subscription={messageQuery}>
+      {({ data, loading }: any) => {
+        // subscribeToMore({
+        // document: messageSubscription,
+        // updateQuery: (prev: Message[], { subscriptionData }: any) => {
+        //   if (!subscriptionData.data) return prev;
+        // const newFeedItem = subscriptionData.data.commentAdded;
+
+        // return Object.assign({}, prev, {
+        //   entry: {
+        //     comments: [newFeedItem, ...prev.entry.comments]
+        //   }
+        // });
+        //   },
+        // });
+        return (
+          <Container ref={messageListRef}>
+            <ul>
+              {!loading && data.Message ? (data.Message as Message[]).map((message) => (
+                <li key={message.id}>
+                  <Username>
+                    {message.User.username} 
+                  </Username>
+                  <DateSpan>
+                    {/* {new Intl.DateTimeFormat('en-GB').format(new Date(message.date))} */}
+                    {message.date}
+                  </DateSpan>
+                  <p>{message.body}</p>
+                </li>
+              )) : null}
+            </ul>
+          </Container>
+        );
+      }}
+    </Subscription>
+  );
+}
 
 const Container = styled.div`
 	margin-top: 85px;
@@ -23,56 +114,5 @@ const Username = styled.span`
 const DateSpan = styled.span`
 	color: darkgray;
 `;
-
-function MessageBox() {
-  const messageListRef = React.createRef<HTMLDivElement>();
-	
-  useEffect(() => {
-    messageListRef.current!.scrollTo(
-      messageListRef.current!.scrollTop, 
-      messageListRef.current!.scrollHeight,
-    );
-  }, [messageListRef.current]);
-
-  const messages = [
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-    {message: 'Illo voluptatem sint ut facere voluptatem sed in.', user: 'Ernesto.Maggio', date: 'Sat Nov 28 2020 19:24:54 GMT+0900 (日本標準時)' },
-  ];
-
-  return (
-    <Container ref={messageListRef}>
-      <ul>
-        {messages.map((message, index) => (
-          // eslint-disable-next-line react/no-array-index-key
-          <li key={index}>
-            <Username>
-              {message.user} 
-            </Username>
-            <DateSpan>
-              {new Intl.DateTimeFormat('en-GB').format(new Date(message.date))}
-            </DateSpan>
-            <p>{message.message}</p>
-          </li>
-        ) )}
-      </ul>
-    </Container>
-  );
-}
 
 export default MessageBox;
